@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserContoller extends Controller
 {
+
     function register(Request $req)
     {
         $user = new User;
