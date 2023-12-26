@@ -21,6 +21,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('register', [UserContoller::class, 'register']);
-Route::post('login', [UserContoller::class, 'login']);  
+Route::post('login', [UserContoller::class, 'login']);
+
+// CRUD 
 Route::get('posts', [PostController::class, 'index']);
 Route::post('addPost', [PostController::class, 'addPost']);
+Route::get('show/{id}', [PostController::class, 'show']);
+Route::delete('delete/{id}', [PostController::class, 'destroy']);
