@@ -24,7 +24,8 @@ Route::post('register', [UserContoller::class, 'register']);
 Route::post('login', [UserContoller::class, 'login']);
 
 // CRUD 
-Route::get('posts', [PostController::class, 'index']);
-Route::post('addPost', [PostController::class, 'addPost']);
-Route::get('show/{id}', [PostController::class, 'show']);
-Route::delete('delete/{id}', [PostController::class, 'destroy']);
+Route::get('recipe', [PostController::class, 'index']);
+Route::post('recipe', [PostController::class, 'addPost']);
+Route::get('recipe/{id}', [PostController::class, 'show']);
+Route::put('recipe/{id}', [PostController::class, 'update']);
+Route::delete('recipe/{id}', [PostController::class, 'destroy']);
