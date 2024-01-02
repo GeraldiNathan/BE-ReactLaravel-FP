@@ -48,7 +48,7 @@ class PostController extends Controller
         $post = new Post();
         $post->title = $request->input('title');
         $post->description = $request->input('description');
-        $post->file_path = $request->file('file_path')->store('public');
+        $post->file_path = $request->file('file')->store('public');
         $post->save();
 
         if ($post) {
