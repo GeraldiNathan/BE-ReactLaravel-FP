@@ -29,3 +29,4 @@ Route::post('recipe', [PostController::class, 'addPost']);
 Route::get('recipe/{id}', [PostController::class, 'show']);
 Route::put('recipe/{id}', [PostController::class, 'update']);
 Route::delete('recipe/{id}', [PostController::class, 'destroy']);
+Route::get('search/{key}', [PostController::class, 'search']);
