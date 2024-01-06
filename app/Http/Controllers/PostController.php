@@ -10,9 +10,7 @@ class PostController extends Controller
 {
     public function index()
     {
-        return Post::all();
-
-        $data = Post::all();
+        return $data = Post::all();
         if ($data->count() > 0) {
             return response()->json([
                 'status' => 200,
@@ -24,6 +22,11 @@ class PostController extends Controller
                 'message' => "Data empty"
             ], 404);
         }
+    }
+
+    public function pagination()
+    {
+        return Post::paginate(3);
     }
 
 
@@ -123,7 +126,7 @@ class PostController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => 400,
-                'message' => $validator->messages()->first()
+                'message' => $validator->messages()
             ], 400);
         }
 
