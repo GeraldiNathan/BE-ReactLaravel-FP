@@ -5,12 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
     public function index()
     {
-        return $data = Post::all();
+        return Post::all();
+
+        $data = Post::all();
         if ($data->count() > 0) {
             return response()->json([
                 'status' => 200,
@@ -23,20 +27,6 @@ class PostController extends Controller
             ], 404);
         }
     }
-
-    // public function pagination()
-    // {
-    //     return Post::paginate(3);
-    // }
-
-    // public function pagination(Request $request)
-    // {
-    //     $perPage = $request->input('perPage', 3);
-    //     $posts = Post::paginate($perPage);
-
-    //     return response()->json($posts);
-    // }
-
 
 
     public function show($id)
@@ -77,59 +67,12 @@ class PostController extends Controller
         };
     }
 
-    // public function update(Request $request, int $id)
-    // {
-    //     // Validate the incoming request
-    //     // $validator = Validator::make($request->all(), [
-    //     //     'title' => 'required|max:1000',
-    //     //     'description' => 'required|max:1000',
-    //     //     'file_path' => 'file|mimes:jpeg,png,jpg,gif,svg',
-    //     // ]);
-
-    //     // if ($validator->fails()) {
-    //     //     return response()->json([
-    //     //         'status' => 400,
-    //     //         'message' => $validator->messages()
-    //     //     ], 400);
-    //     // }
-
-    //     // Find the post by ID
-    //     $post = Post::find($id);
-
-    //     if (!$post) {
-    //         return response()->json([
-    //             'status' => 404,
-    //             'message' => 'Post not found'
-    //         ], 404);
-    //     }
-
-    //     // Update post data
-    //     $post->title = $request->input('title');
-    //     $post->description = $request->input('description');
-
-    //     // Check if a new file is uploaded
-    //     if ($request->hasFile('file_path')) {
-    //         // Store the new file
-    //         $post->file_path = $request->file('file_path')->store('public');
-    //     }
-
-    //     // Save the updated post
-    //     $post->save();
-
-    //     return response()->json([
-    //         'status' => 200,
-    //         'message' => 'Post successfully updated',
-    //         'data' => $post
-    //     ], 200);
-    // }
-
     public function update(Request $request, int $id)
     {
-
         $validator = Validator::make($request->all(), [
-            'title' => 'required|max:1000',
-            'description' => 'max:1000',
-            'file_path' => 'file|mimes:jpeg,png,jpg,gif,svg',
+            'title' => 'required|max:191',
+            'description' => 'required|max:191',
+            'file_path' => 'sometimes|file|mimes:jpeg,png,jpg,gif,svg', // Use 'sometimes' to allow update without file
         ]);
 
         if ($validator->fails()) {
@@ -139,30 +82,43 @@ class PostController extends Controller
             ], 400);
         }
 
-        $post = Post::find($id);
+        $data = Post::find($id);
 
-        if (!$post) {
+        if (!$data) {
             return response()->json([
                 'status' => 404,
-                'message' => 'Post not found'
+                'message' => "Data not found"
             ], 404);
         }
 
-        $post->title = $request->input('title');
-        $post->description = $request->input('description');
+   
+        $data->title = $request->input("title");
+        $data->description = $request->input("description");
+        
 
+        // Check if file_path is present in the request
         if ($request->hasFile('file_path')) {
-            $post->file_path = $request->file('file_path')->store('public');
-        }
+            // Old image delete
+            // Assuming you are storing the file path in the 'file_path' column
+            if (Storage::disk('public')->exists($data->file_path)) {
+                Storage::disk('public')->delete($data->file_path);
+            }
 
-        $post->save();
+            // Save the new file
+            $file_path = $request->file('file_path')->store('public');
+
+            // Update the file path in the database
+            $data->update([
+                'file_path' => $file_path,
+            ]);
+        }
 
         return response()->json([
             'status' => 200,
-            'message' => 'Post successfully updated',
-            'data' => $post
+            'message' => "Data successfully updated"
         ], 200);
     }
+
 
     public function destroy($id)
     {
@@ -181,10 +137,5 @@ class PostController extends Controller
                 'message' => 'Data not found'
             ], 404);
         }
-    }
-
-    public function search($key)
-    {
-        return Post::where('title', 'LIKE', "%$key%")->get();
     }
 }
