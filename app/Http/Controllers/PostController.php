@@ -57,24 +57,34 @@ class PostController extends Controller
 
     public function addPost(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|max:1000',
+            'description' => 'required|max:5000',
+            'file_path' => 'file|mimes:jpeg,png,jpg,gif,svg'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 400,
+                'message' => $validator->messages()
+            ], 400);
+        }
+
         $post = new Post();
         $post->title = $request->input('title');
         $post->description = $request->input('description');
-        $post->file_path = $request->file('file_path')->store('public');
+
+        if ($request->hasFile('file_path') && $request->file('file_path')->isValid()) {
+            $post->file_path = $request->file('file_path')->store('public');
+        }
+
         $post->save();
 
-        if ($post) {
-            return response()->json([
-                'status' => 200,
-                'message' => "add data successfully done",
-                'data' => $post
-            ], 200);
-        } else {
-            return response()->json([
-                'status' => 404,
-                'message' => "something went wrong"
-            ], 404);
-        };
+        return response()->json([
+            'status' => 200,
+            'message' => 'Post successfully created',
+            'data' => $post
+        ], 200);
     }
 
     public function update(Request $request, int $id)
@@ -82,7 +92,7 @@ class PostController extends Controller
 
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:1000',
-            'description' => 'max:1000',
+            'description' => 'required|string|max:5000',
             'file_path' => 'file|mimes:jpeg,png,jpg,gif,svg',
         ]);
 
