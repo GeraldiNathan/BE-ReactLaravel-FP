@@ -82,7 +82,7 @@ class PostController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Post successfully created',
+            'message' => 'New recipe has been created!',
             'data' => $post
         ], 200);
     }
@@ -123,7 +123,7 @@ class PostController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Post successfully updated',
+            'message' => 'Recipe has been updated',
             'data' => $post
         ], 200);
     }
