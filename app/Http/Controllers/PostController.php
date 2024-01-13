@@ -59,7 +59,7 @@ class PostController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:1000',
-            'description' => 'required|max:5000',
+            'description' => 'required|max:15000',
             'file_path' => 'file|mimes:jpeg,png,jpg,gif,svg'
         ]);
 
@@ -92,7 +92,7 @@ class PostController extends Controller
 
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:1000',
-            'description' => 'required|string|max:5000',
+            'description' => 'required|string|max:15000',
             'file_path' => 'file|mimes:jpeg,png,jpg,gif,svg',
         ]);
 
