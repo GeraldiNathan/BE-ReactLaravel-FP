@@ -24,21 +24,6 @@ class PostController extends Controller
         }
     }
 
-    // public function pagination()
-    // {
-    //     return Post::paginate(3);
-    // }
-
-    // public function pagination(Request $request)
-    // {
-    //     $perPage = $request->input('perPage', 3);
-    //     $posts = Post::paginate($perPage);
-
-    //     return response()->json($posts);
-    // }
-
-
-
     public function show($id)
     {
         $data = Post::where('id', $id)->first();
