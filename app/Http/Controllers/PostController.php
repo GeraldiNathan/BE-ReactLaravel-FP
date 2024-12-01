@@ -127,10 +127,15 @@ class PostController extends Controller
         } else {
             return  response()->json([
                 'status' => 404,
-                'message' => 'Data not found'
+                'message' => 'Data failed to delete'
             ], 404);
         }
     }
+
+    // public function destroyAll(){
+    //     return $data = Post::deleteAll();
+
+    // }
 
     public function search($key)
     {

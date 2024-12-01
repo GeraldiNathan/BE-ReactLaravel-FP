@@ -28,12 +28,22 @@ class UserContoller extends Controller
             return response()->json([
                 "Error" => "Email doesnt match with password"
             ], 401);
+        } else {
+            return response([
+                "Success" => "Login Successfull"
+            ], 202);
         }
+
         if (!Hash::check($req->password, $user->password)) {
             return response()->json([
                 "Error" => "Password doesnt match with email!"
             ], 404);
+        } else {
+            return response([
+                "Success" => "Password match with email!"
+            ], 202);
         }
+
         return $user;
     }
 }
